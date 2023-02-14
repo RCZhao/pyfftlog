@@ -202,7 +202,7 @@ from scipy.fftpack import rfft, irfft
 __all__ = ['fhti', 'fftl', 'fht', 'fhtq', 'krgood']
 
 
-def fhti(n, mu, dlnr, q=0, kr=1, kropt=0):
+def fhti(n, mu, dlnr, q=0, kr=1, kropt=0, silence=True):
     r"""Initialize the working array xsave used by fftl, fht, and fhtq.
 
     fhti initializes the working array xsave used by fftl, fht, and fhtq. fhti
@@ -268,18 +268,22 @@ def fhti(n, mu, dlnr, q=0, kr=1, kropt=0):
         d = krgood(mu, q, dlnr, kr)
         if abs(kr/d - 1) >= 1e-15:
             kr = d
-            print(" kr changed to ", kr)
+            if not silence:
+                print(" kr changed to ", kr)
     else:             # option to change kr to low-ringing kr interactively
         d = krgood(mu, q, dlnr, kr)
         if abs(kr/d-1.0) >= 1e-15:
-            print(" change kr = ", kr)
-            print(" to low-ringing kr = ", d)
+            if not silence:
+                print(" change kr = ", kr)
+                print(" to low-ringing kr = ", d)
             go = input("? [CR, y=yes, n=no, x=exit]: ")
             if go.lower() in ['', 'y']:
                 kr = d
-                print(" kr changed to ", kr)
+                if not silence:
+                    print(" kr changed to ", kr)
             elif go.lower() == 'n':
-                print(" kr left unchanged at ", kr)
+                if not silence:
+                    print(" kr left unchanged at ", kr)
             else:
                 print("exit")
                 return False
